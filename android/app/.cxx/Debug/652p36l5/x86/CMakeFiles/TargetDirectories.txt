@@ -1,0 +1,2 @@
+C:/Users/micha/Desktop/Projects/vanya-diploma/android/app/.cxx/Debug/652p36l5/x86/CMakeFiles/edit_cache.dir
+C:/Users/micha/Desktop/Projects/vanya-diploma/android/app/.cxx/Debug/652p36l5/x86/CMakeFiles/rebuild_cache.dir
