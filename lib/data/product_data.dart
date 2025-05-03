@@ -34,3 +34,40 @@
 //     ];
 //   }
 // }
+
+import 'product_card.dart';
+
+class ProductData {
+  static List<ProductCard> getProducts() {
+    return [
+      ProductCard(
+        title: "Книга \"Двенадцать стульев\"",
+        description: "Книга о приключениях мальчика, который отправился в путешествие по миру.",
+        imageUrl: 'lib/assets/pictures/good1.png',
+        price: 1.99,
+        store: "Wildberies",
+      ),
+      ProductCard(
+        title: "Кроссовки летние спортивные для подростка",
+        description: "Кроссовки для подростка, которые помогут ему в путешествии по миру.",
+        imageUrl: 'lib/assets/pictures/good2.png',
+        price: 0.99,
+        store: "Ozon",
+      ),
+      ProductCard(
+        title: "Princess Принцесс духи женские",
+        description: "Духи для женщин, которые помогут ей в путешествии по миру.",
+        imageUrl: 'lib/assets/pictures/good3.png',
+        price: 2.49,
+        store: "Ozon",
+      ),
+      ProductCard(
+        title: "Маскхалат камуфляжный летний костюм горка",
+        description: "Стрелять нациков пиф паф СВО Россия вперёд! За Путина!",
+        imageUrl: 'lib/assets/pictures/good4.png',
+        price: 2.49,
+        store: "Ozon",
+      ),
+    ];
+  }
+}

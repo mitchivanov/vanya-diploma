@@ -432,35 +432,32 @@ class _LoginPageState extends State<LoginPageCreateState>{
                         ),
                       ),
                       const Padding(padding: EdgeInsets.all(10)),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFFF6F1FB),
-                                elevation: 10,
-                              ),
-                              onPressed: _submitForm,
-                              child: const Text('Вход', style: TextStyle(color: Colors.black, fontSize: 16)),
-                            ),
+                      SizedBox(
+                        width: screenSize.width - 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFFF6F1FB),
+                            elevation: 10,
                           ),
-                          const SizedBox(width: 16),
-                          Expanded(
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: const Color(0xFF8E97FD),
-                                elevation: 10,
-                              ),
-                              onPressed: () {
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (context) => const RegisterPage()),
-                                );
-                              },
-                              child: const Text('Регистрация', style: TextStyle(color: Colors.white, fontSize: 16)),
-                            ),
+                          onPressed: _submitForm,
+                          child: const Text('Вход', style: TextStyle(color: Colors.black, fontSize: 16)),
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      SizedBox(
+                        width: screenSize.width - 100,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF8E97FD),
+                            elevation: 10,
                           ),
-                        ],
+                          onPressed: () {
+                            Navigator.of(context).push(
+                              MaterialPageRoute(builder: (context) => const RegisterPage()),
+                            );
+                          },
+                          child: const Text('Регистрация', style: TextStyle(color: Colors.white, fontSize: 16)),
+                        ),
                       ),
                     ],
                   ),
