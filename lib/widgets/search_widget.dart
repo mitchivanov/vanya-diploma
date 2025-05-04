@@ -44,7 +44,7 @@ class SearchWidget extends StatelessWidget {
               )
           ),
           leading: IconButton(
-            icon: Image.asset(backArrowIcon),
+            icon: Image.asset(backArrowIcon, color: accentBlueColor),
             onPressed: () {
               Navigator.of(context).pop(MaterialPageRoute(builder: (ctx) => const DistributionPage()));
             },

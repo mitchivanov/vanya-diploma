@@ -10,6 +10,7 @@ String eyeOffIcon = 'lib/assets/icons/eye_off_icon.png';
 // App bar icons
 String homeIcon = 'lib/assets/icons/home_icon.png';
 String searchListIcon = 'lib/assets/icons/search_list_icon.png';
+String cartIcon = 'lib/assets/icons/cart_icon.png';
 String favoriteIcon = 'lib/assets/icons/favorite_icon.png';
 String accountIcon = 'lib/assets/icons/account_icon.png';
 

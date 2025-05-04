@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:gift_app/widgets/button_with_image_widget.dart';
+
 import 'package:gift_app/widgets/categories_list_widget.dart';
-import 'package:gift_app/pages/product_list_page.dart';
+
 import '../data/colors/main_colors.dart';
 
 class CategoriesPage extends StatelessWidget {
@@ -22,7 +22,7 @@ class CategoriesPage extends StatelessWidget {
             )
         ),
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back, color: accentBlueColor),
           onPressed: () {
             Navigator.of(context).pop();
           },

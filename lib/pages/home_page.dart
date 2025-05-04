@@ -11,14 +11,55 @@ import '../widgets/transition_clipper.dart';
 import '../data/product_data.dart';
 import '../data/product_card.dart';
 import 'categories_page.dart';
+import 'distribution_page.dart';
 
-class HomePage extends StatelessWidget{
+class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
-  void _openProductPage(BuildContext context, ProductCard product) {
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  late List<bool> _inCart; // Список для отслеживания товаров в корзине
+  late List<bool> _inFavorites; // Список для отслеживания избранных товаров
+
+  @override
+  void initState() {
+    super.initState();
+    final products = ProductData.getProducts();
+    _inCart = List.generate(products.length, (index) => false);
+    _inFavorites = List.generate(products.length, (index) => false);
+  }
+
+  void _openProductPage(BuildContext context, ProductCard product, int index) {
     Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ProductDetailPage(product: product)),
+      MaterialPageRoute(builder: (context) => ProductDetailPage(
+        product: product, 
+        index: index,
+        inCart: _inCart[index],
+        inFavorite: _inFavorites[index],
+        onCartChanged: (value) => setState(() => _inCart[index] = value),
+        onFavoriteChanged: (value) => setState(() => _inFavorites[index] = value),
+      )),
     );
+  }
+
+  void _toggleCart(int index) {
+    setState(() {
+      _inCart[index] = !_inCart[index];
+      
+      // Здесь вы можете вызвать метод добавления в корзину из родительского виджета
+      // Например, если вы используете Provider, BLoC или передаете callback из DistributionPage
+    });
+  }
+
+  void _toggleFavorite(int index) {
+    setState(() {
+      _inFavorites[index] = !_inFavorites[index];
+      
+      // Здесь вы можете вызвать метод добавления в избранное из родительского виджета
+    });
   }
 
   @override
@@ -117,7 +158,7 @@ class HomePage extends StatelessWidget{
                     itemBuilder: (context, index) {
                       final product = products[index];
                       return GestureDetector(
-                        onTap: () => _openProductPage(context, product),
+                        onTap: () => _openProductPage(context, product, index),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white,
@@ -130,47 +171,80 @@ class HomePage extends StatelessWidget{
                               ),
                             ],
                           ),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Stack(
                             children: [
-                              ClipRRect(
-                                borderRadius: const BorderRadius.only(
-                                  topLeft: Radius.circular(18),
-                                  topRight: Radius.circular(18),
-                                ),
-                                child: AspectRatio(
-                                  aspectRatio: 1.2,
-                                  child: Image.asset(
-                                    product.imageUrl,
-                                    fit: BoxFit.cover,
-                                    width: double.infinity,
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  ClipRRect(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(18),
+                                      topRight: Radius.circular(18),
+                                    ),
+                                    child: AspectRatio(
+                                      aspectRatio: 1.2,
+                                      child: Image.asset(
+                                        product.imageUrl,
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                                    ),
                                   ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                child: Text(
-                                  product.title,
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                  maxLines: 2,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8),
-                                child: Text(
-                                  product.store,
-                                  style: const TextStyle(fontSize: 13, color: Colors.grey),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                child: Text(
-                                  '${product.price.toStringAsFixed(2)} ₽',
-                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: accentLightColor),
-                                ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
+                                    child: Text(
+                                      product.title,
+                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                                    child: Text(
+                                      product.store,
+                                      style: const TextStyle(fontSize: 13, color: Colors.grey),
+                                      maxLines: 1,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          '${product.price.toStringAsFixed(2)} ₽',
+                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: accentLightColor),
+                                        ),
+                                        Row(
+                                          children: [
+                                            // Кнопка добавления в избранное
+                                            GestureDetector(
+                                              onTap: () => _toggleFavorite(index),
+                                              child: Icon(
+                                                _inFavorites[index] ? Icons.favorite : Icons.favorite_border,
+                                                color: _inFavorites[index] ? Colors.red : Colors.grey,
+                                                size: 22,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 8),
+                                            // Кнопка добавления в корзину
+                                            GestureDetector(
+                                              onTap: () => _toggleCart(index),
+                                              child: Icon(
+                                                _inCart[index] ? Icons.shopping_cart : Icons.add_shopping_cart_outlined,
+                                                color: _inCart[index] ? accentLightColor : Colors.grey,
+                                                size: 22,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 4),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
                               ),
                             ],
                           ),
@@ -188,16 +262,83 @@ class HomePage extends StatelessWidget{
   }
 }
 
-class ProductDetailPage extends StatelessWidget {
+class ProductDetailPage extends StatefulWidget {
   final ProductCard product;
-  const ProductDetailPage({super.key, required this.product});
+  final int index;
+  final bool inCart;
+  final bool inFavorite;
+  final Function(bool) onCartChanged;
+  final Function(bool) onFavoriteChanged;
+
+  const ProductDetailPage({
+    super.key, 
+    required this.product, 
+    required this.index,
+    required this.inCart,
+    required this.inFavorite,
+    required this.onCartChanged,
+    required this.onFavoriteChanged,
+  });
+
+  @override
+  _ProductDetailPageState createState() => _ProductDetailPageState();
+}
+
+class _ProductDetailPageState extends State<ProductDetailPage> {
+  late bool _inCart;
+  late bool _inFavorite;
+
+  @override
+  void initState() {
+    super.initState();
+    _inCart = widget.inCart;
+    _inFavorite = widget.inFavorite;
+  }
+
+  void _toggleCart() {
+    setState(() {
+      _inCart = !_inCart;
+      widget.onCartChanged(_inCart);
+    });
+  }
+
+  void _toggleFavorite() {
+    setState(() {
+      _inFavorite = !_inFavorite;
+      widget.onFavoriteChanged(_inFavorite);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(product.title, maxLines: 1, overflow: TextOverflow.ellipsis),
+        title: Text(widget.product.title, maxLines: 1, overflow: TextOverflow.ellipsis),
         backgroundColor: accentLightColor,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: accentBlueColor),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        actions: [
+          // Кнопка добавления в избранное
+          IconButton(
+            icon: Icon(
+              _inFavorite ? Icons.favorite : Icons.favorite_border,
+              color: _inFavorite ? Colors.red : Colors.white,
+            ),
+            onPressed: _toggleFavorite,
+          ),
+          // Кнопка добавления в корзину
+          IconButton(
+            icon: Icon(
+              _inCart ? Icons.shopping_cart : Icons.add_shopping_cart_outlined,
+              color: _inCart ? accentGoldColor : Colors.white,
+            ),
+            onPressed: _toggleCart,
+          ),
+        ],
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),
@@ -208,7 +349,7 @@ class ProductDetailPage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(18),
                 child: Image.asset(
-                  product.imageUrl,
+                  widget.product.imageUrl,
                   fit: BoxFit.cover,
                   width: 220,
                   height: 220,
@@ -216,13 +357,30 @@ class ProductDetailPage extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 18),
-            Text(product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+            Text(widget.product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
             const SizedBox(height: 8),
-            Text(product.store, style: const TextStyle(fontSize: 15, color: Colors.grey)),
+            Text(widget.product.store, style: const TextStyle(fontSize: 15, color: Colors.grey)),
             const SizedBox(height: 8),
-            Text('${product.price.toStringAsFixed(2)} ₽', style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: accentLightColor)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '${widget.product.price.toStringAsFixed(2)} ₽', 
+                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: accentLightColor)
+                ),
+                ElevatedButton.icon(
+                  onPressed: _toggleCart,
+                  icon: Icon(_inCart ? Icons.shopping_cart : Icons.add_shopping_cart),
+                  label: Text(_inCart ? 'Убрать из корзины' : 'В корзину'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: _inCart ? Colors.red.shade200 : accentGoldColor,
+                    foregroundColor: Colors.black,
+                  ),
+                ),
+              ],
+            ),
             const SizedBox(height: 18),
-            Text(product.description, style: const TextStyle(fontSize: 16)),
+            Text(widget.product.description, style: const TextStyle(fontSize: 16)),
           ],
         ),
       ),

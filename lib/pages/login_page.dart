@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gift_app/widgets/jwtGen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import '../data/colors/main_colors.dart';
 import '../data/icons.dart';
@@ -288,181 +289,202 @@ class _LoginPageState extends State<LoginPageCreateState>{
                     colors: [ironManMetal, accentLightColor.withOpacity(0.7), accentGoldColor,]
                 )
             ),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SwingAnimation(),
-                Text('Подаркус', style: GoogleFonts.pacifico(
-                  fontSize: 70,
-                  color: accentLightColor,
-                  shadows: <Shadow>[
-                    const Shadow(
-                        offset: Offset(10.0, 10.0),
-                        blurRadius: 3.0,
-                        color: Colors.black
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 48.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // SVG-логотип. Замените путь на свой SVG-файл
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16, bottom: 24),
+                    child: SvgPicture.asset(
+                      'lib/assets/mike_oxlong.svg', // Исправленный путь
+                      height: 525,
+                      width: 525,
+                      fit: BoxFit.contain,
+                      colorFilter: const ColorFilter.mode(Color.fromARGB(255, 0, 0, 0), BlendMode.srcIn),
                     ),
-                  ]
-                )),
-                Form(
-                  key: _formKey,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        width: screenSize.width - 100,
-                        height: 60,
-                        child: TextFormField(
-                          controller: _loginController,
-                          decoration: InputDecoration(labelText: 'Логин или e-mail',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 3, color: Colors.red
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            suffixIcon: IconButton(
-                              onPressed: () {
-                                widgetCoordinates = getWidgetCoordinates(_key);
-                                _showEmailHint(context);
-                              },
-                              icon: Image.asset(questionIcon),
-                              key: _key,
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.black),
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Введите логин или e-mail';
-                            }
-                            if (value.contains('@')) {
-                              if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                                return 'Введите корректный e-mail';
-                              }
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _email = value!;
-                          },
-                          keyboardType: TextInputType.emailAddress,
-                          autocorrect: false,
-                          textInputAction: TextInputAction.next,
-                          focusNode: _focusEmailNode,
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        width: screenSize.width - 100,
-                        height: 60,
-                        child: TextFormField(
-                          controller: _passwordController,
-                          decoration: InputDecoration(
-                            labelText: 'Пароль',
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            errorBorder: OutlineInputBorder(
-                              borderSide: const BorderSide(
-                                  width: 3, color: Colors.red
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            focusedBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            focusedErrorBorder: OutlineInputBorder(
-                              borderSide: BorderSide(
-                                  width: 3, color: accentLightColor
-                              ),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            suffixIcon: IconButton(
-                                onPressed: () {
-                                  _togglePasswordVisible();
-                                },
-                                icon: _obscureText
-                                    ? Image.asset(eyeIcon)
-                                    : Image.asset(eyeOffIcon)
-                            ),
-                          ),
-                          style: const TextStyle(color: Colors.black),
-                          validator: (value) {
-                            if (value!.isEmpty){
-                              return 'Введите пароль';
-                            }
-                            // Проверка на технический аккаунт admin/admin через контроллер
-                            if (_loginController.text == 'admin' && value == 'admin') {
-                              return null;
-                            }
-                            if (password.contains(value) == false){
-                              return 'Неверный пароль';
-                            }
-                            return null;
-                          },
-                          onSaved: (value) {
-                            _password = value!;
-                          },
-                          autocorrect: false,
-                          obscureText: _obscureText,
-                          focusNode: _focusPasswordNode,
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.all(10)),
-                      SizedBox(
-                        width: screenSize.width - 100,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFF6F1FB),
-                            elevation: 10,
-                          ),
-                          onPressed: _submitForm,
-                          child: const Text('Вход', style: TextStyle(color: Colors.black, fontSize: 16)),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        width: screenSize.width - 100,
-                        child: ElevatedButton(
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFF8E97FD),
-                            elevation: 10,
-                          ),
-                          onPressed: () {
-                            Navigator.of(context).push(
-                              MaterialPageRoute(builder: (context) => const RegisterPage()),
-                            );
-                          },
-                          child: const Text('Регистрация', style: TextStyle(color: Colors.white, fontSize: 16)),
-                        ),
-                      ),
-                    ],
                   ),
-                ),
-              ],
+                  Expanded(
+                    child: Center(
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SizedBox(
+                              width: screenSize.width - 100,
+                              height: 56,
+                              child: TextFormField(
+                                controller: _loginController,
+                                decoration: InputDecoration(labelText: 'Логин или e-mail',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 2, color: Colors.red
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  suffixIcon: IconButton(
+                                    onPressed: () {
+                                      widgetCoordinates = getWidgetCoordinates(_key);
+                                      _showEmailHint(context);
+                                    },
+                                    icon: Image.asset(questionIcon),
+                                    key: _key,
+                                  ),
+                                ),
+                                style: const TextStyle(color: Colors.black),
+                                validator: (value) {
+                                  if (value == null || value.isEmpty) {
+                                    return 'Введите логин или e-mail';
+                                  }
+                                  if (value.contains('@')) {
+                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
+                                      return 'Введите корректный e-mail';
+                                    }
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _email = value!;
+                                },
+                                keyboardType: TextInputType.emailAddress,
+                                autocorrect: false,
+                                textInputAction: TextInputAction.next,
+                                focusNode: _focusEmailNode,
+                              ),
+                            ),
+                            const Padding(padding: EdgeInsets.all(10)),
+                            SizedBox(
+                              width: screenSize.width - 100,
+                              height: 56,
+                              child: TextFormField(
+                                controller: _passwordController,
+                                decoration: InputDecoration(
+                                  labelText: 'Пароль',
+                                  enabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  errorBorder: OutlineInputBorder(
+                                    borderSide: const BorderSide(
+                                        width: 2, color: Colors.red
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  focusedBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  focusedErrorBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                        width: 2, color: accentLightColor
+                                    ),
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                  suffixIcon: IconButton(
+                                      onPressed: () {
+                                        _togglePasswordVisible();
+                                      },
+                                      icon: _obscureText
+                                          ? Image.asset(eyeIcon)
+                                          : Image.asset(eyeOffIcon)
+                                  ),
+                                ),
+                                style: const TextStyle(color: Colors.black),
+                                validator: (value) {
+                                  if (value!.isEmpty){
+                                    return 'Введите пароль';
+                                  }
+                                  // Проверка на технический аккаунт admin/admin через контроллер
+                                  if (_loginController.text == 'admin' && value == 'admin') {
+                                    return null;
+                                  }
+                                  if (password.contains(value) == false){
+                                    return 'Неверный пароль';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  _password = value!;
+                                },
+                                autocorrect: false,
+                                obscureText: _obscureText,
+                                focusNode: _focusPasswordNode,
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: screenSize.width - 100,
+                              height: 56,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFFF6F1FB),
+                                  foregroundColor: Colors.black,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    side: BorderSide(color: accentLightColor, width: 2),
+                                  ),
+                                ),
+                                onPressed: _submitForm,
+                                child: const Text('Вход', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            const SizedBox(height: 16),
+                            SizedBox(
+                              width: screenSize.width - 100,
+                              height: 56,
+                              child: ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: const Color(0xFF8E97FD),
+                                  foregroundColor: Colors.white,
+                                  elevation: 3,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                    side: BorderSide(color: accentLightColor, width: 2),
+                                  ),
+                                ),
+                                onPressed: () {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(builder: (context) => const RegisterPage()),
+                                  );
+                                },
+                                child: const Text('Регистрация', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                            // Защитный отступ снизу
+                            const SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

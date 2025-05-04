@@ -5,6 +5,7 @@ import 'package:gift_app/data/icons.dart';
 import 'package:gift_app/pages/wishlist_page.dart';
 import 'package:gift_app/utils/card_of_products.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../data/colors/main_colors.dart';
 
 import 'distribution_page.dart';
 
@@ -128,7 +129,7 @@ class _ProductPageState extends State<ProductPage> {
                 )
             ),
             leading: IconButton(
-              icon: Image.asset(backArrowIcon),
+              icon: Image.asset(backArrowIcon, color: accentBlueColor),
               onPressed: () {
                 FocusScope.of(context).unfocus();
                 Timer(const Duration(milliseconds: 150), () {

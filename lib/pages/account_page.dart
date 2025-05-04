@@ -24,6 +24,12 @@ class AccountPage extends StatelessWidget {
           borderRadius: BorderRadius.vertical(bottom: Radius.circular(20)),
         ),
         elevation: 8,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: accentBlueColor),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
