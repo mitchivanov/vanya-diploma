@@ -6,6 +6,7 @@ import 'package:gift_app/pages/wishlist_page.dart';
 import 'package:gift_app/utils/card_of_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../data/colors/main_colors.dart';
+import '../widgets/unified_appbar.dart';
 
 import 'distribution_page.dart';
 
@@ -99,44 +100,15 @@ class _ProductPageState extends State<ProductPage> {
         theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF00FFF0)),
         home: Scaffold(
           extendBody: true,
-          appBar: AppBar(
-            toolbarHeight: 53,
-            title: Container(
-              margin: const EdgeInsets.all(15),
-              height: 37,
-              decoration: BoxDecoration(
-                color: Colors.grey,
-                borderRadius: BorderRadius.circular(20),
-              ),
-              child: TextField(
-                controller: searchController,
-                textInputAction: TextInputAction.search,
-                // onSubmitted: (value) {
-                //   print('Submitted: $value');
-                // },
-                decoration: const InputDecoration(
-                  hintText: 'Поиск...',
-                  hintStyle: TextStyle(fontSize: 18),
-                  contentPadding: EdgeInsets.only(left: 10, bottom: 10),
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
-            centerTitle: true,
-            shape: const RoundedRectangleBorder(
-                borderRadius: BorderRadius.vertical(
-                    bottom: Radius.circular(20)
-                )
-            ),
-            leading: IconButton(
-              icon: Image.asset(backArrowIcon, color: accentBlueColor),
-              onPressed: () {
-                FocusScope.of(context).unfocus();
-                Timer(const Duration(milliseconds: 150), () {
-                  Navigator.of(context).pop(MaterialPageRoute(builder: (ctx) => const DistributionPage()));
-                });
-              },
-            ),
+          appBar: UnifiedAppBar(
+            title: 'Gift Finder',
+            showBack: true,
+            onBack: () {
+              FocusScope.of(context).unfocus();
+              Timer(const Duration(milliseconds: 150), () {
+                Navigator.of(context).pop(MaterialPageRoute(builder: (ctx) => const DistributionPage()));
+              });
+            },
           ),
           body: Column(
             children: [

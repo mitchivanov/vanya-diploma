@@ -9,9 +9,14 @@ import 'package:gift_app/widgets/transition_clipper.dart';
 
 import 'pages/distribution_page.dart';
 import 'package:gift_app/data/colors/main_colors.dart';
+import 'utils/cart_model.dart';
+import 'utils/favorite_model.dart';
 
 //Start class with starter
-void main() => runApp(const MainWindow());
+void main() {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(const MainWindow());
+}
 
 class MainWindow extends StatelessWidget {
   const MainWindow({super.key});
@@ -62,6 +67,7 @@ class MainWindow extends StatelessWidget {
           labelStyle: TextStyle(color: accentGoldColor),
         ),
       ),
+      builder: (context, child) => FavoriteModel(child: CartModel(child: child ?? const SizedBox.shrink())),
       home: const SplashScreen(),
     );
   }

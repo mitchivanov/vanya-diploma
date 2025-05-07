@@ -187,22 +187,43 @@ class _LoginPageState extends State<LoginPageCreateState>{
     });
   }
 
+  String? _validateLoginOrEmail(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Введите логин или e-mail';
+    }
+    return null;
+  }
+
+  String? _validatePassword(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Введите пароль';
+    }
+    return null;
+  }
+
+  void _showError(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), backgroundColor: Colors.red, duration: const Duration(seconds: 2)),
+    );
+  }
+
   Future<void> _submitForm() async {
     _focusEmailNode.unfocus();
     _focusPasswordNode.unfocus();
     if (_formKey.currentState!.validate()){
       _formKey.currentState!.save();
-      // accessTokenGenerator();
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      await prefs.setBool('is_logged_in', true);
-      Timer(const Duration(milliseconds: 150), () {
-        if (_loginController.text == 'admin' && _password == 'admin') {
+      if (_loginController.text == 'admin' && _passwordController.text == 'admin') {
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('is_logged_in', true);
+        Timer(const Duration(milliseconds: 150), () {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Вход выполнен как администратор!'), backgroundColor: Colors.green),
           );
-        }
-        Navigator.of(context).pushReplacement(_createRoute());
-      });
+          Navigator.of(context).pushReplacement(_createRoute());
+        });
+      } else {
+        _showError('Неверный логин или пароль');
+      }
     }
   }
 
@@ -353,17 +374,7 @@ class _LoginPageState extends State<LoginPageCreateState>{
                                   ),
                                 ),
                                 style: const TextStyle(color: Colors.black),
-                                validator: (value) {
-                                  if (value == null || value.isEmpty) {
-                                    return 'Введите логин или e-mail';
-                                  }
-                                  if (value.contains('@')) {
-                                    if (!RegExp(r'^[^@]+@[^@]+\.[^@]+').hasMatch(value)) {
-                                      return 'Введите корректный e-mail';
-                                    }
-                                  }
-                                  return null;
-                                },
+                                validator: _validateLoginOrEmail,
                                 onSaved: (value) {
                                   _email = value!;
                                 },
@@ -415,19 +426,7 @@ class _LoginPageState extends State<LoginPageCreateState>{
                                   ),
                                 ),
                                 style: const TextStyle(color: Colors.black),
-                                validator: (value) {
-                                  if (value!.isEmpty){
-                                    return 'Введите пароль';
-                                  }
-                                  // Проверка на технический аккаунт admin/admin через контроллер
-                                  if (_loginController.text == 'admin' && value == 'admin') {
-                                    return null;
-                                  }
-                                  if (password.contains(value) == false){
-                                    return 'Неверный пароль';
-                                  }
-                                  return null;
-                                },
+                                validator: _validatePassword,
                                 onSaved: (value) {
                                   _password = value!;
                                 },

@@ -12,6 +12,9 @@ import '../data/product_data.dart';
 import '../data/product_card.dart';
 import 'categories_page.dart';
 import 'distribution_page.dart';
+import '../utils/cart_model.dart';
+import '../utils/favorite_model.dart';
+import '../widgets/unified_appbar.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,70 +24,16 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  late List<bool> _inCart; // Список для отслеживания товаров в корзине
-  late List<bool> _inFavorites; // Список для отслеживания избранных товаров
-
-  @override
-  void initState() {
-    super.initState();
-    final products = ProductData.getProducts();
-    _inCart = List.generate(products.length, (index) => false);
-    _inFavorites = List.generate(products.length, (index) => false);
-  }
-
-  void _openProductPage(BuildContext context, ProductCard product, int index) {
-    Navigator.of(context).push(
-      MaterialPageRoute(builder: (context) => ProductDetailPage(
-        product: product, 
-        index: index,
-        inCart: _inCart[index],
-        inFavorite: _inFavorites[index],
-        onCartChanged: (value) => setState(() => _inCart[index] = value),
-        onFavoriteChanged: (value) => setState(() => _inFavorites[index] = value),
-      )),
-    );
-  }
-
-  void _toggleCart(int index) {
-    setState(() {
-      _inCart[index] = !_inCart[index];
-      
-      // Здесь вы можете вызвать метод добавления в корзину из родительского виджета
-      // Например, если вы используете Provider, BLoC или передаете callback из DistributionPage
-    });
-  }
-
-  void _toggleFavorite(int index) {
-    setState(() {
-      _inFavorites[index] = !_inFavorites[index];
-      
-      // Здесь вы можете вызвать метод добавления в избранное из родительского виджета
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final products = ProductData.getProducts();
+    final cart = CartModel.of(context);
     return MaterialApp(
       title: 'Gift app',
       theme: ThemeData(scaffoldBackgroundColor: primaryLightColor),
       home: Scaffold(
         backgroundColor: primaryLightColor,
-        appBar: AppBar(
-          toolbarHeight: 53,
-          backgroundColor: accentLightColor,
-          title: Text('Gift app',
-            style: GoogleFonts.merriweather(
-              textStyle: const TextStyle(fontSize: 28, color: accentGoldColor, fontWeight: FontWeight.bold, shadows: [Shadow(color: accentBlueColor, blurRadius: 8, offset: Offset(0, 0))]),
-            ),
-          ),
-          centerTitle: true,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.vertical(
-                  bottom: Radius.circular(20)
-              )
-          ),
-        ),
+        appBar: const UnifiedAppBar(title: 'Gift Finder'),
         body: SafeArea(
           child: Column(
             children: [
@@ -152,11 +101,12 @@ class _HomePageState extends State<HomePage> {
                       crossAxisCount: 2,
                       crossAxisSpacing: 12,
                       mainAxisSpacing: 12,
-                      childAspectRatio: 0.72,
+                      childAspectRatio: 0.75,
                     ),
                     itemCount: products.length,
                     itemBuilder: (context, index) {
                       final product = products[index];
+                      final inCart = CartModel.of(context).items.any((item) => item.product.title == product.title);
                       return GestureDetector(
                         onTap: () => _openProductPage(context, product, index),
                         child: Container(
@@ -173,78 +123,170 @@ class _HomePageState extends State<HomePage> {
                           ),
                           child: Stack(
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  ClipRRect(
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(18),
-                                      topRight: Radius.circular(18),
-                                    ),
-                                    child: AspectRatio(
-                                      aspectRatio: 1.2,
-                                      child: Image.asset(
-                                        product.imageUrl,
-                                        fit: BoxFit.cover,
+                              // 1. Фоновое изображение
+                              Positioned.fill(
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.only(
+                                    topLeft: Radius.circular(18),
+                                    topRight: Radius.circular(18),
+                                    bottomLeft: Radius.circular(18),
+                                    bottomRight: Radius.circular(18),
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      // Фиксированное изображение 
+                                      SizedBox(
                                         width: double.infinity,
+                                        height: 130,
+                                        child: Image.asset(
+                                          product.imageUrl,
+                                          fit: BoxFit.cover,
+                                        ),
                                       ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 6),
-                                    child: Text(
-                                      product.title,
-                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
-                                      maxLines: 2,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                                    child: Text(
-                                      product.store,
-                                      style: const TextStyle(fontSize: 13, color: Colors.grey),
-                                      maxLines: 1,
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Text(
-                                          '${product.price.toStringAsFixed(2)} ₽',
-                                          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16, color: accentLightColor),
-                                        ),
-                                        Row(
-                                          children: [
-                                            // Кнопка добавления в избранное
-                                            GestureDetector(
-                                              onTap: () => _toggleFavorite(index),
-                                              child: Icon(
-                                                _inFavorites[index] ? Icons.favorite : Icons.favorite_border,
-                                                color: _inFavorites[index] ? Colors.red : Colors.grey,
-                                                size: 22,
+                                      // Нижняя белая часть с закруглениями
+                                      Expanded(
+                                        child: Container(
+                                          color: Colors.white,
+                                          child: Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              // Название
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 2),
+                                                child: Text(
+                                                  product.title,
+                                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 8),
-                                            // Кнопка добавления в корзину
-                                            GestureDetector(
-                                              onTap: () => _toggleCart(index),
-                                              child: Icon(
-                                                _inCart[index] ? Icons.shopping_cart : Icons.add_shopping_cart_outlined,
-                                                color: _inCart[index] ? accentLightColor : Colors.grey,
-                                                size: 22,
+                                              // Магазин
+                                              Padding(
+                                                padding: const EdgeInsets.only(left: 8, right: 8, bottom: 4),
+                                                child: Text(
+                                                  product.store,
+                                                  style: const TextStyle(fontSize: 10, color: Colors.grey),
+                                                  maxLines: 1,
+                                                  overflow: TextOverflow.ellipsis,
+                                                ),
                                               ),
-                                            ),
-                                            const SizedBox(width: 4),
-                                          ],
+                                              const Spacer(),
+                                              // Кнопка и сердечко в отдельном контейнере с закруглениями
+                                              Container(
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                  borderRadius: BorderRadius.vertical(bottom: Radius.circular(18)),
+                                                ),
+                                                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
+                                                child: Row(
+                                                  children: [
+                                                    // Сердечко
+                                                    SizedBox(
+                                                      width: 28,
+                                                      height: 32,
+                                                      child: IconButton(
+                                                        padding: EdgeInsets.zero,
+                                                        iconSize: 20,
+                                                        icon: Icon(
+                                                          FavoriteModel.of(context).contains(product) ? Icons.favorite : Icons.favorite_border,
+                                                          color: FavoriteModel.of(context).contains(product) ? Colors.red : Colors.grey,
+                                                        ),
+                                                        onPressed: () => _toggleFavorite(product),
+                                                      ),
+                                                    ),
+                                                    const SizedBox(width: 6),
+                                                    // Кнопка/счетчик
+                                                    Expanded(
+                                                      child: Builder(
+                                                        builder: (context) {
+                                                          final cartItem = CartModel.of(context).items.firstWhere(
+                                                            (item) => item.product.title == product.title,
+                                                            orElse: () => CartItem(product: product, quantity: 0),
+                                                          );
+                                                          final quantity = cartItem.quantity;
+                                                          if (quantity == 0) {
+                                                            return SizedBox(
+                                                              height: 32,
+                                                              child: ElevatedButton(
+                                                                style: ElevatedButton.styleFrom(
+                                                                  padding: EdgeInsets.zero,
+                                                                  backgroundColor: accentGoldColor,
+                                                                  foregroundColor: Colors.black,
+                                                                  elevation: 2,
+                                                                  shape: RoundedRectangleBorder(
+                                                                    borderRadius: BorderRadius.circular(8),
+                                                                  ),
+                                                                ),
+                                                                onPressed: () {
+                                                                  CartModel.of(context).add(product);
+                                                                  setState(() {});
+                                                                },
+                                                                child: Center(
+                                                                  child: Text(
+                                                                    '${product.price.toStringAsFixed(0)} ₽',
+                                                                    style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                ),
+                                                              ),
+                                                            );
+                                                          } else {
+                                                            return Container(
+                                                              height: 32,
+                                                              decoration: BoxDecoration(
+                                                                color: Colors.white,
+                                                                borderRadius: BorderRadius.circular(8),
+                                                                border: Border.all(color: accentLightColor, width: 0.8),
+                                                              ),
+                                                              child: Row(
+                                                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                                children: [
+                                                                  SizedBox(
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    child: IconButton(
+                                                                      padding: EdgeInsets.zero,
+                                                                      iconSize: 16,
+                                                                      icon: const Icon(Icons.remove, color: Colors.red),
+                                                                      onPressed: () {
+                                                                        CartModel.of(context).remove(product);
+                                                                        setState(() {});
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                  Text(
+                                                                    '$quantity',
+                                                                    style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                                                                  ),
+                                                                  SizedBox(
+                                                                    width: 32,
+                                                                    height: 32,
+                                                                    child: IconButton(
+                                                                      padding: EdgeInsets.zero,
+                                                                      iconSize: 16,
+                                                                      icon: const Icon(Icons.add, color: Colors.green),
+                                                                      onPressed: () {
+                                                                        CartModel.of(context).add(product);
+                                                                        setState(() {});
+                                                                      },
+                                                                    ),
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            );
+                                                          }
+                                                        },
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                             ],
                           ),
@@ -259,6 +301,35 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  void _openProductPage(BuildContext context, ProductCard product, int index) {
+    final favoriteModel = FavoriteModel.of(context);
+    Navigator.of(context).push(
+      MaterialPageRoute(builder: (context) => ProductDetailPage(
+        product: product,
+        index: index,
+        inCart: CartModel.of(context).items.any((item) => item.product.title == product.title),
+        inFavorite: favoriteModel.contains(product),
+        onCartChanged: (value) {
+          if (value) {
+            CartModel.of(context).add(product);
+          } else {
+            CartModel.of(context).remove(product);
+          }
+          setState(() {});
+        },
+        onFavoriteChanged: (value) {
+          favoriteModel.toggle(product);
+          setState(() {});
+        },
+      )),
+    );
+  }
+
+  void _toggleFavorite(ProductCard product) {
+    FavoriteModel.of(context).toggle(product);
+    setState(() {});
   }
 }
 
@@ -305,6 +376,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   void _toggleFavorite() {
     setState(() {
       _inFavorite = !_inFavorite;
+      if (_inFavorite) {
+        FavoriteModel.of(context).add(widget.product);
+      } else {
+        FavoriteModel.of(context).remove(widget.product);
+      }
       widget.onFavoriteChanged(_inFavorite);
     });
   }
@@ -312,33 +388,11 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.product.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-        backgroundColor: accentLightColor,
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: accentBlueColor),
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-        ),
-        actions: [
-          // Кнопка добавления в избранное
-          IconButton(
-            icon: Icon(
-              _inFavorite ? Icons.favorite : Icons.favorite_border,
-              color: _inFavorite ? Colors.red : Colors.white,
-            ),
-            onPressed: _toggleFavorite,
-          ),
-          // Кнопка добавления в корзину
-          IconButton(
-            icon: Icon(
-              _inCart ? Icons.shopping_cart : Icons.add_shopping_cart_outlined,
-              color: _inCart ? accentGoldColor : Colors.white,
-            ),
-            onPressed: _toggleCart,
-          ),
-        ],
+      appBar: UnifiedAppBar(
+        title: widget.product.title,
+        showBack: true,
+        centerTitle: false,
+        onBack: () => Navigator.of(context).pop(),
       ),
       body: Padding(
         padding: const EdgeInsets.all(18.0),

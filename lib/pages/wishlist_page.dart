@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/unified_appbar.dart';
 
 class WishlistPage extends StatefulWidget {
   final List<Map<String, dynamic>> cartItems;
@@ -29,7 +30,7 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Корзина')),
+      appBar: const UnifiedAppBar(title: 'Gift Finder', showBack: true),
       body: cartItems.isEmpty
           ? Center(child: Text('Корзина пуста'))
           : ListView.builder(

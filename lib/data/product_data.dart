@@ -46,6 +46,7 @@ class ProductData {
         imageUrl: 'lib/assets/pictures/good1.png',
         price: 1.99,
         store: "Wildberies",
+        category: "Книги",
       ),
       ProductCard(
         title: "Кроссовки летние спортивные для подростка",
@@ -53,6 +54,7 @@ class ProductData {
         imageUrl: 'lib/assets/pictures/good2.png',
         price: 0.99,
         store: "Ozon",
+        category: "Одежда",
       ),
       ProductCard(
         title: "Princess Принцесс духи женские",
@@ -60,6 +62,7 @@ class ProductData {
         imageUrl: 'lib/assets/pictures/good3.png',
         price: 2.49,
         store: "Ozon",
+        category: "Красота",
       ),
       ProductCard(
         title: "Маскхалат камуфляжный летний костюм горка",
@@ -67,6 +70,31 @@ class ProductData {
         imageUrl: 'lib/assets/pictures/good4.png',
         price: 2.49,
         store: "Ozon",
+        category: "Одежда",
+      ),
+      ProductCard(
+        title: "Смарт-часы X1000",
+        description: "Умные часы с множеством функций для спорта и жизни.",
+        imageUrl: 'lib/assets/pictures/good1.png',
+        price: 5.99,
+        store: "Wildberies",
+        category: "Электроника",
+      ),
+      ProductCard(
+        title: "Мягкая игрушка Медведь",
+        description: "Плюшевый медведь для детей и взрослых.",
+        imageUrl: 'lib/assets/pictures/good2.png',
+        price: 3.49,
+        store: "Ozon",
+        category: "Игрушки",
+      ),
+      ProductCard(
+        title: "Декоративная подушка",
+        description: "Яркая подушка для украшения дома.",
+        imageUrl: 'lib/assets/pictures/good3.png',
+        price: 2.19,
+        store: "Ozon",
+        category: "Дом",
       ),
     ];
   }
