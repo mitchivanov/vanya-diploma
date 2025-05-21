@@ -4,6 +4,7 @@ import '../data/colors/main_colors.dart';
 import '../utils/cart_model.dart';
 import '../data/product_card.dart';
 import '../widgets/unified_appbar.dart';
+import 'distribution_page.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -185,27 +186,24 @@ class _CartPageState extends State<CartPage> {
                     height: 56,
                     child: ElevatedButton(
                       onPressed: () {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Заказ оформлен!'),
-                            backgroundColor: Colors.green,
-                          ),
+                        Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(builder: (context) => const DistributionPage()),
+                          (Route<dynamic> route) => false,
                         );
-                        cart.clear();
-                        setState(() {});
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: accentGoldColor,
                         foregroundColor: Colors.black,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
-                          side: BorderSide(color: accentLightColor, width: 2),
                         ),
                         elevation: 3,
                       ),
-                      child: const Text(
-                        'Оформить заказ',
-                        style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      child: Text(
+                        'Перейти в магазин',
+                        style: GoogleFonts.merriweather(
+                          textStyle: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),

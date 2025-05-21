@@ -1,0 +1,122 @@
+@startuml
+' Этот файл описывает UML-диаграмму приложения Gift Portal (сокращенная версия).
+
+skinparam packageStyle rect
+
+package "Application" <<Frame>> {
+  class MainWindow
+  class SplashScreen
+}
+
+MainWindow --|> StatelessWidget
+SplashScreen --|> StatefulWidget
+
+package "Pages" <<Cloud>> {
+  class AccountPage
+  class CartPage
+  class CategoriesPage
+  class DistributionPage
+  class FavoritePage
+  class HomePage
+  class LoginPage
+  class ProductListPage
+  class ProductListByCategoryPage
+  class RegisterPage
+  class WishlistPage
+}
+
+note right of "Pages" : Pages generally use UnifiedAppBar & MainNavBar. \n Several pages display ProductCard.
+
+package "Data" <<Database>> {
+  class ProductCard
+  class ProductData
+  class UserProfile
+  class IconsData
+  package "Colors" <<Folder>> {
+    class MainColors
+  }
+}
+
+package "Widgets" <<Folder>> {
+  class AbsWidget
+  class ButtonWithDialogWidget
+  class ButtonWithImageWidget
+  class CategoriesListWidget
+  class DiscountWidget
+  class FavoriteListWidget
+  class IdeasWidget
+  class LoginFormWidget
+  class MainNavBar
+  class SearchWidget
+  class TransitionClipper
+  class UnifiedAppBar
+  class JwtGen
+}
+
+package "Utils" <<Gear>> {
+  class CartModel
+  class FavoriteModel
+  class CardOfProducts
+  class ListInfoHomeProducts
+  class GetWidgetCoordinates
+}
+
+' Core Application Flow & Structure
+MainWindow --> SplashScreen : initializes
+SplashScreen --> LoginPage : on_initial_launch_or_logout
+SplashScreen --> DistributionPage : on_logged_in
+MainWindow o-- CartModel
+MainWindow o-- FavoriteModel
+MainWindow ..> MainColors : themed_with
+
+' Page Navigation & Key Interactions
+DistributionPage --> HomePage
+DistributionPage --> CategoriesPage
+DistributionPage --> ProductListPage
+DistributionPage --> FavoritePage
+DistributionPage --> CartPage
+DistributionPage --> AccountPage
+
+AccountPage --> UserProfile : displays
+AccountPage --> WishlistPage
+AccountPage --> LoginPage : action_logout
+LoginPage --> RegisterPage
+RegisterPage --> LoginPage
+
+CategoriesPage --> ProductListByCategoryPage
+
+' Key Widget Usages by Pages
+HomePage o-- CategoriesListWidget
+HomePage o-- SearchWidget
+HomePage o-- DiscountWidget
+HomePage o-- IdeasWidget
+FavoritePage o-- FavoriteListWidget
+
+' Model Interactions
+CartPage ..> CartModel : manages
+FavoritePage ..> FavoriteModel : manages
+LoginPage ..> JwtGen : for_auth
+
+' Widget Dependencies & Data Usage
+CategoriesListWidget ..> ProductData : uses_category_data
+FavoriteListWidget ..> ProductCard : displays
+SearchWidget ..> ProductData : searches_in
+DiscountWidget ..> ProductData : for_discounts
+IdeasWidget ..> ProductData : for_ideas
+TransitionClipper --|> CustomClipper
+UnifiedAppBar o-- SearchWidget : optional_inclusion
+MainNavBar --> DistributionPage : primary_navigation_hub
+
+' Utils & Data Model Interactions
+CartModel o-- ProductData : manages_products
+FavoriteModel o-- ProductData : manages_products
+ProductData *-- ProductCard : contains_many
+CardOfProducts ..> ProductCard : visual_representation
+
+' Common UI Components (Implicit usage by many pages - noted in Pages package)
+' Pages ..> UnifiedAppBar : uses (general)
+' Pages ..> MainNavBar : uses (general)
+' Pages ..> ProductCard : displays (general for product-related pages)
+
+
+@enduml 
