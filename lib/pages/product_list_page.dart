@@ -1,9 +1,9 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gift_app/data/icons.dart';
-import 'package:gift_app/pages/wishlist_page.dart';
-import 'package:gift_app/utils/card_of_products.dart';
+import 'package:gift_portal/data/icons.dart';
+import 'package:gift_portal/pages/wishlist_page.dart';
+import 'package:gift_portal/utils/card_of_products.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../data/colors/main_colors.dart';
 import '../widgets/unified_appbar.dart';
@@ -96,12 +96,12 @@ class _ProductPageState extends State<ProductPage> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        title: 'Gift app',
+        title: 'Gift Portal',
         theme: ThemeData(scaffoldBackgroundColor: const Color(0xFF00FFF0)),
         home: Scaffold(
           extendBody: true,
           appBar: UnifiedAppBar(
-            title: 'Gift Finder',
+            title: 'Gift Portal',
             showBack: true,
             onBack: () {
               FocusScope.of(context).unfocus();

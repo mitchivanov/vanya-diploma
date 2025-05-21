@@ -18,7 +18,7 @@ class _CartPageState extends State<CartPage> {
     final cart = CartModel.of(context);
     return Scaffold(
       backgroundColor: primaryLightColor,
-      appBar: const UnifiedAppBar(title: 'Gift Finder'),
+      appBar: const UnifiedAppBar(title: 'Gift Portal'),
       body: ValueListenableBuilder<int>(
         valueListenable: cart.notifier,
         builder: (context, _, __) {

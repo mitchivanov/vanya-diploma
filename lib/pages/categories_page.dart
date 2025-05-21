@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'package:gift_app/widgets/categories_list_widget.dart';
-import 'package:gift_app/widgets/unified_appbar.dart';
+import 'package:gift_portal/widgets/categories_list_widget.dart';
+import 'package:gift_portal/widgets/unified_appbar.dart';
 import 'product_list_by_category_page.dart';
 
 import '../data/colors/main_colors.dart';
@@ -23,7 +23,7 @@ class CategoriesPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: primaryLightColor,
-      appBar: const UnifiedAppBar(title: 'Gift Finder', showBack: true),
+      appBar: const UnifiedAppBar(title: 'Gift Portal', showBack: true),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: GridView.builder(

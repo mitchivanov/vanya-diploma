@@ -29,11 +29,11 @@ class _HomePageState extends State<HomePage> {
     final products = ProductData.getProducts();
     final cart = CartModel.of(context);
     return MaterialApp(
-      title: 'Gift app',
+      title: 'Gift Portal',
       theme: ThemeData(scaffoldBackgroundColor: primaryLightColor),
       home: Scaffold(
         backgroundColor: primaryLightColor,
-        appBar: const UnifiedAppBar(title: 'Gift Finder'),
+        appBar: const UnifiedAppBar(title: 'Gift Portal'),
         body: SafeArea(
           child: Column(
             children: [

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_app/data/icons.dart';
+import 'package:gift_portal/data/icons.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import '../data/colors/button_colors.dart';

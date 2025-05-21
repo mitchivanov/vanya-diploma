@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 //Import pages
-import 'package:gift_app/pages/login_page.dart';
-import 'package:gift_app/widgets/transition_clipper.dart';
+import 'package:gift_portal/pages/login_page.dart';
+import 'package:gift_portal/widgets/transition_clipper.dart';
 
 import 'pages/distribution_page.dart';
-import 'package:gift_app/data/colors/main_colors.dart';
+import 'package:gift_portal/data/colors/main_colors.dart';
 import 'utils/cart_model.dart';
 import 'utils/favorite_model.dart';
 
@@ -24,6 +24,7 @@ class MainWindow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      title: 'Gift Portal',
       theme: ThemeData(
         scaffoldBackgroundColor: primaryLightColor,
         primaryColor: accentLightColor,
@@ -134,8 +135,17 @@ class _SplashScreenState extends State<SplashScreen>{
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Center(child: CircularProgressIndicator()),
+    return Scaffold(
+      body: Container(
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            colors: [Color(0xFF41C8FF), Color(0xFFE61EFF)],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+        ),
+        child: const Center(child: CircularProgressIndicator()),
+      ),
     );
   }
 }

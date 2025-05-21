@@ -78,7 +78,7 @@ class _AccountPageState extends State<AccountPage> {
     }
     return Scaffold(
       backgroundColor: primaryLightColor,
-      appBar: const UnifiedAppBar(title: 'Gift Finder'),
+      appBar: const UnifiedAppBar(title: 'Gift Portal'),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18.0, vertical: 18.0),

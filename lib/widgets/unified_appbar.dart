@@ -18,9 +18,9 @@ class UnifiedAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: const Color(0xFF0A1A4A),
+      backgroundColor: const Color(0xFF7606EA),
       elevation: 8,
-      title: Text(
+      title: Texst
         title,
         style: GoogleFonts.merriweather(
           textStyle: const TextStyle(

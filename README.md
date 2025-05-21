@@ -1,4 +1,4 @@
-# gift_app
+# Gift Portal
 
 A new Flutter project.
 

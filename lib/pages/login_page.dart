@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gift_app/widgets/jwtGen.dart';
+import 'package:gift_portal/widgets/jwtGen.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -295,10 +295,9 @@ class _LoginPageState extends State<LoginPageCreateState>{
           height: screenSize.height,
           decoration: const BoxDecoration(
             gradient: LinearGradient(
+              colors: [Color(0xFF41C8FF), Color(0xFFE61EFF)],
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
-              stops: [0.0, 0.75, 1],
-              colors: [ironManMetal, ironManRed, accentGoldColor],
             ),
           ),
           child: Container(
@@ -307,7 +306,7 @@ class _LoginPageState extends State<LoginPageCreateState>{
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
                     stops: const [0.0, 0.75, 1],
-                    colors: [ironManMetal, accentLightColor.withOpacity(0.7), accentGoldColor,]
+                    colors: [Color(0xFF41C8FF).withOpacity(0.7), Color(0xFFE61EFF).withOpacity(0.7), Color(0xFFE61EFF),]
                 )
             ),
             child: Padding(

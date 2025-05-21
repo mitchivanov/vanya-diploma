@@ -46,7 +46,7 @@ class _FavoritePageState extends State<FavoritePage> {
     final favorite = FavoriteModel.of(context);
     return Scaffold(
       backgroundColor: primaryLightColor,
-      appBar: const UnifiedAppBar(title: 'Gift Finder'),
+      appBar: const UnifiedAppBar(title: 'Gift Portal'),
       body: ValueListenableBuilder<int>(
         valueListenable: favorite.notifier,
         builder: (context, _, __) {

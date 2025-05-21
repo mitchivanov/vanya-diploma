@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_app/utils/list_info_home_products.dart';
+import 'package:gift_portal/utils/list_info_home_products.dart';
 
 import '../data/colors/main_colors.dart';
 import 'button_with_dialog_widget.dart';

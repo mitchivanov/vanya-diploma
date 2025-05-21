@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:gift_app/data/icons.dart';
+import 'package:gift_portal/data/icons.dart';
 
 import '../data/colors/main_colors.dart';
 import '../pages/distribution_page.dart';
@@ -10,7 +10,7 @@ class SearchWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Gift app',
+      title: 'Gift Portal',
       theme: ThemeData(scaffoldBackgroundColor: primaryLightColor),
       home: Scaffold(
         extendBodyBehindAppBar: true,

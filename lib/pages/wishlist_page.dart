@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gift_portal/data/colors/main_colors.dart';
 import '../widgets/unified_appbar.dart';
 
 class WishlistPage extends StatefulWidget {
@@ -30,7 +31,8 @@ class _WishlistPageState extends State<WishlistPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const UnifiedAppBar(title: 'Gift Finder', showBack: true),
+      backgroundColor: primaryLightColor,
+      appBar: const UnifiedAppBar(title: 'Gift Portal', showBack: true),
       body: cartItems.isEmpty
           ? Center(child: Text('Корзина пуста'))
           : ListView.builder(

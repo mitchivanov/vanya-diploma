@@ -89,7 +89,8 @@ class _RegisterPageState extends State<RegisterPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const UnifiedAppBar(title: 'Gift Finder', showBack: true),
+      resizeToAvoidBottomInset: true,
+      appBar: const UnifiedAppBar(title: 'Gift Portal', showBack: true),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(24.0),
