@@ -67,7 +67,7 @@ class _FavoritePageState extends State<FavoritePage> {
               crossAxisCount: 2,
               crossAxisSpacing: 12,
               mainAxisSpacing: 12,
-              childAspectRatio: 0.75,
+              childAspectRatio: 0.68,
             ),
             itemCount: favorite.items.length,
             itemBuilder: (context, index) {
@@ -102,11 +102,37 @@ class _FavoritePageState extends State<FavoritePage> {
                           ),
                           Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Text(product.title,
-                                maxLines: 2,
-                                overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                            child: SizedBox(
+                              height: 32,
+                              child: Text(product.title,
+                                  maxLines: 2,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12)),
+                            ),
                           ),
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF7606EA).withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: const Color(0xFF7606EA).withOpacity(0.3),
+                                  width: 0.5,
+                                ),
+                              ),
+                              child: Text(
+                                product.category,
+                                style: const TextStyle(
+                                  fontSize: 9,
+                                  color: Color(0xFF7606EA),
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 4),
                           Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 8.0),
                             child: Text(

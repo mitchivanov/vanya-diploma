@@ -1,4 +1,5 @@
 class ProductCard {
+  final String id;
   final String imageUrl;
   final String title;
   final String description;
@@ -8,6 +9,7 @@ class ProductCard {
   final String productUrl;
 
   ProductCard({
+    required this.id,
     required this.imageUrl,
     required this.title,
     required this.description,
@@ -18,6 +20,7 @@ class ProductCard {
   });
 
   Map<String, dynamic> toJson() => {
+    'id': id,
     'imageUrl': imageUrl,
     'title': title,
     'description': description,
@@ -28,6 +31,7 @@ class ProductCard {
   };
 
   factory ProductCard.fromJson(Map<String, dynamic> json) => ProductCard(
+    id: json['id'],
     imageUrl: json['imageUrl'],
     title: json['title'],
     description: json['description'],

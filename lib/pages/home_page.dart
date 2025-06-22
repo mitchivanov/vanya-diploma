@@ -193,7 +193,7 @@ class _HomePageState extends State<HomePage> {
                           crossAxisCount: 2,
                           crossAxisSpacing: 12,
                           mainAxisSpacing: 12,
-                          childAspectRatio: 0.75,
+                          childAspectRatio: 0.68,
                         ),
                         itemCount: products.length,
                         itemBuilder: (context, index) {
@@ -244,11 +244,37 @@ class _HomePageState extends State<HomePage> {
                                                   // Название
                                                   Padding(
                                                     padding: const EdgeInsets.only(left: 8, right: 8, top: 8, bottom: 2),
-                                                    child: Text(
-                                                      product.title,
-                                                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
-                                                      maxLines: 1,
-                                                      overflow: TextOverflow.ellipsis,
+                                                    child: SizedBox(
+                                                      height: 32, // Фиксированная высота для названия
+                                                      child: Text(
+                                                        product.title,
+                                                        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 12),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow.ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  // Категория
+                                                  Padding(
+                                                    padding: const EdgeInsets.only(left: 8, right: 8, bottom: 2),
+                                                    child: Container(
+                                                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                                                      decoration: BoxDecoration(
+                                                        color: const Color(0xFF7606EA).withOpacity(0.1),
+                                                        borderRadius: BorderRadius.circular(8),
+                                                        border: Border.all(
+                                                          color: const Color(0xFF7606EA).withOpacity(0.3),
+                                                          width: 0.5,
+                                                        ),
+                                                      ),
+                                                      child: Text(
+                                                        product.category,
+                                                        style: const TextStyle(
+                                                          fontSize: 9,
+                                                          color: Color(0xFF7606EA),
+                                                          fontWeight: FontWeight.w600,
+                                                        ),
+                                                      ),
                                                     ),
                                                   ),
                                                   // Магазин
@@ -408,26 +434,6 @@ class ProductDetailPage extends StatefulWidget {
 }
 
 class _ProductDetailPageState extends State<ProductDetailPage> {
-  late bool _inFavorite;
-
-  @override
-  void initState() {
-    super.initState();
-    _inFavorite = widget.inFavorite;
-  }
-
-  void _toggleFavorite() {
-    setState(() {
-      _inFavorite = !_inFavorite;
-      if (_inFavorite) {
-        FavoriteModel.of(context).add(widget.product);
-      } else {
-        FavoriteModel.of(context).remove(widget.product);
-      }
-      widget.onFavoriteChanged(_inFavorite);
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -437,77 +443,108 @@ class _ProductDetailPageState extends State<ProductDetailPage> {
         centerTitle: false,
         onBack: () => Navigator.of(context).pop(),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(18.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Center(
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(18),
-                child: Image.asset(
-                  widget.product.imageUrl,
-                  fit: BoxFit.cover,
-                  width: 220,
-                  height: 220,
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(18.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Center(
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(18),
+                  child: Image.asset(
+                    widget.product.imageUrl,
+                    fit: BoxFit.cover,
+                    width: 220,
+                    height: 220,
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 18),
-            Text(widget.product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
-            const SizedBox(height: 8),
-            Text(widget.product.store, style: const TextStyle(fontSize: 15, color: Colors.grey)),
-            const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  '${widget.product.price.toStringAsFixed(2)} ₽', 
-                  style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: accentLightColor)
+              const SizedBox(height: 18),
+              Text(widget.product.title, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
+              const SizedBox(height: 8),
+              // Категория товара
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF7606EA).withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: const Color(0xFF7606EA).withOpacity(0.3),
+                    width: 1,
+                  ),
                 ),
-                ElevatedButton.icon(
-                  onPressed: _toggleFavorite,
-                  icon: Icon(_inFavorite ? Icons.favorite : Icons.favorite_border),
-                  label: Text(_inFavorite ? 'Убрать из избранного' : 'В избранное'),
+                child: Text(
+                  widget.product.category,
+                  style: const TextStyle(
+                    fontSize: 14,
+                    color: Color(0xFF7606EA),
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 8),
+              Text(widget.product.store, style: const TextStyle(fontSize: 15, color: Colors.grey)),
+              const SizedBox(height: 8),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    '${widget.product.price.toStringAsFixed(2)} ₽', 
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18, color: accentLightColor)
+                  ),
+                  ValueListenableBuilder<int>(
+                    valueListenable: FavoriteModel.of(context).notifier,
+                    builder: (context, value, child) {
+                      final isFavorite = FavoriteModel.of(context).contains(widget.product);
+                      return ElevatedButton.icon(
+                        onPressed: () {
+                          FavoriteModel.of(context).toggle(widget.product);
+                        },
+                        icon: Icon(isFavorite ? Icons.favorite : Icons.favorite_border),
+                        label: Text(isFavorite ? 'Убрать из избранного' : 'В избранное'),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: isFavorite ? Colors.red.shade200 : accentGoldColor,
+                          foregroundColor: Colors.black,
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              Text(widget.product.description, style: const TextStyle(fontSize: 16)),
+              const SizedBox(height: 24),
+              // Кнопка копирования ссылки
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () async {
+                    await Clipboard.setData(ClipboardData(text: widget.product.productUrl));
+                    if (mounted) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(
+                          content: Text('Ссылка скопирована в буфер обмена!'),
+                          backgroundColor: Colors.green,
+                          duration: Duration(seconds: 2),
+                        ),
+                      );
+                    }
+                  },
+                  icon: const Icon(Icons.link, color: Colors.white),
+                  label: const Text('Скопировать ссылку на товар', style: TextStyle(fontSize: 16, color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: _inFavorite ? Colors.red.shade200 : accentGoldColor,
-                    foregroundColor: Colors.black,
+                    backgroundColor: accentLightColor,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    elevation: 3,
+                    padding: const EdgeInsets.symmetric(vertical: 12),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 18),
-            Text(widget.product.description, style: const TextStyle(fontSize: 16)),
-            const SizedBox(height: 24),
-            // Кнопка копирования ссылки
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton.icon(
-                onPressed: () async {
-                  await Clipboard.setData(ClipboardData(text: widget.product.productUrl));
-                  if (mounted) {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Ссылка скопирована в буфер обмена!'),
-                        backgroundColor: Colors.green,
-                        duration: Duration(seconds: 2),
-                      ),
-                    );
-                  }
-                },
-                icon: const Icon(Icons.link, color: Colors.white),
-                label: const Text('Скопировать ссылку на товар', style: TextStyle(fontSize: 16, color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: accentLightColor,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  elevation: 3,
-                  padding: const EdgeInsets.symmetric(vertical: 12),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
