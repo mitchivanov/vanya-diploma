@@ -4,7 +4,6 @@ import 'package:google_fonts/google_fonts.dart';
 import '../data/colors/main_colors.dart';
 import '../utils/favorite_model.dart';
 import '../data/product_card.dart';
-import '../utils/cart_model.dart';
 import 'home_page.dart' show ProductDetailPage;
 import '../widgets/unified_appbar.dart';
 
@@ -17,22 +16,12 @@ class FavoritePage extends StatefulWidget {
 
 class _FavoritePageState extends State<FavoritePage> {
   void _openProductPage(BuildContext context, ProductCard product) {
-    final cart = CartModel.of(context);
     final favorite = FavoriteModel.of(context);
     Navigator.of(context).push(
       MaterialPageRoute(builder: (context) => ProductDetailPage(
         product: product,
         index: 0,
-        inCart: cart.items.any((item) => item.product.title == product.title),
         inFavorite: favorite.contains(product),
-        onCartChanged: (value) {
-          if (value) {
-            cart.add(product);
-          } else {
-            cart.remove(product);
-          }
-          setState(() {});
-        },
         onFavoriteChanged: (value) {
           favorite.toggle(product);
           setState(() {});

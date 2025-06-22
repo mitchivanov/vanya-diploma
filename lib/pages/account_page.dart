@@ -105,9 +105,9 @@ class _AccountPageState extends State<AccountPage> {
                     children: [
                       CircleAvatar(
                         radius: 38,
-                        backgroundColor: ironManMetal.withOpacity(0.2),
+                        backgroundColor: Colors.grey.shade200,
                         backgroundImage: _profile.photoPath != null ? FileImage(File(_profile.photoPath!)) : null,
-                        child: _profile.photoPath == null ? const Icon(Icons.person, size: 48, color: ironManMetal) : null,
+                        child: _profile.photoPath == null ? Icon(Icons.person, size: 48, color: Colors.grey.shade600) : null,
                       ),
                       const SizedBox(height: 12),
                       Row(
@@ -133,7 +133,7 @@ class _AccountPageState extends State<AccountPage> {
                             label: const Text('Удалить'),
                             style: ElevatedButton.styleFrom(
                               backgroundColor: ironManMetal,
-                              foregroundColor: Colors.white,
+                              foregroundColor: ironManRed,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
                               ),

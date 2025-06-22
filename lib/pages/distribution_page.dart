@@ -8,9 +8,7 @@ import 'account_page.dart';
 import 'categories_page.dart';
 import 'favorite_page.dart';
 import 'home_page.dart';
-import 'cart_page.dart';
 import '../widgets/main_nav_bar.dart';
-import '../utils/cart_model.dart';
 import '../utils/favorite_model.dart';
 
 class DistributionPage extends StatefulWidget {
@@ -41,7 +39,6 @@ class _HomePageState extends State<DistributionPage> {
   int _selectedIndex = 0;
   static final List<Widget> _widgetOptions = <Widget>[
     HomePage(),
-    CartPage(),
     FavoritePage(),
     AccountPage(),
   ];
@@ -53,7 +50,6 @@ class _HomePageState extends State<DistributionPage> {
   }
 
   Future<void> _loadLocalData() async {
-    await CartModel.of(context).loadFromPrefs();
     await FavoriteModel.of(context).loadFromPrefs();
     setState(() {});
   }

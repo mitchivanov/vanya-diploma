@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../data/product_data.dart';
 import '../data/product_card.dart';
 import '../widgets/unified_appbar.dart';
 import '../data/colors/main_colors.dart';
-import '../utils/cart_model.dart';
 import '../utils/favorite_model.dart';
 import 'home_page.dart';
 
@@ -113,97 +113,59 @@ class _ProductListByCategoryPageState extends State<ProductListByCategoryPage> {
                                                 SizedBox(
                                                   width: 28,
                                                   height: 32,
-                                                  child: IconButton(
-                                                    padding: EdgeInsets.zero,
-                                                    iconSize: 20,
-                                                    icon: Icon(
-                                                      FavoriteModel.of(context).contains(product) ? Icons.favorite : Icons.favorite_border,
-                                                      color: FavoriteModel.of(context).contains(product) ? Colors.red : Colors.grey,
-                                                    ),
-                                                    onPressed: () => _toggleFavorite(product),
+                                                  child: ValueListenableBuilder<int>(
+                                                    valueListenable: FavoriteModel.of(context).notifier,
+                                                    builder: (context, value, child) {
+                                                      final isFavorite = FavoriteModel.of(context).contains(product);
+                                                      return IconButton(
+                                                        padding: EdgeInsets.zero,
+                                                        iconSize: 20,
+                                                        icon: Icon(
+                                                          isFavorite ? Icons.favorite : Icons.favorite_border,
+                                                          color: isFavorite ? Colors.red : Colors.grey,
+                                                        ),
+                                                        onPressed: () => _toggleFavorite(product),
+                                                      );
+                                                    },
                                                   ),
                                                 ),
                                                 const SizedBox(width: 6),
                                                 // Кнопка/счетчик
                                                 Expanded(
-                                                  child: Builder(
-                                                    builder: (context) {
-                                                      final cartItem = CartModel.of(context).items.firstWhere(
-                                                        (item) => item.product.title == product.title,
-                                                        orElse: () => CartItem(product: product, quantity: 0),
-                                                      );
-                                                      final quantity = cartItem.quantity;
-                                                      if (quantity == 0) {
-                                                        return SizedBox(
-                                                          height: 32,
-                                                          child: ElevatedButton(
-                                                            style: ElevatedButton.styleFrom(
-                                                              padding: EdgeInsets.zero,
-                                                              backgroundColor: accentGoldColor,
-                                                              foregroundColor: Colors.black,
-                                                              elevation: 2,
-                                                              shape: RoundedRectangleBorder(
-                                                                borderRadius: BorderRadius.circular(8),
-                                                              ),
-                                                            ),
-                                                            onPressed: () {
-                                                              CartModel.of(context).add(product);
-                                                              setState(() {});
-                                                            },
-                                                            child: Center(
-                                                              child: Text(
-                                                                '${product.price.toStringAsFixed(0)} ₽',
-                                                                style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
-                                                              ),
+                                                  child: SizedBox(
+                                                    height: 32,
+                                                    child: ElevatedButton(
+                                                      style: ElevatedButton.styleFrom(
+                                                        padding: EdgeInsets.zero,
+                                                        backgroundColor: accentGoldColor,
+                                                        foregroundColor: Colors.black,
+                                                        elevation: 2,
+                                                        shape: RoundedRectangleBorder(
+                                                          borderRadius: BorderRadius.circular(8),
+                                                        ),
+                                                      ),
+                                                      onPressed: () {
+                                                        Navigator.of(context).push(
+                                                          MaterialPageRoute(
+                                                            builder: (context) => ProductDetailPage(
+                                                              product: product,
+                                                              index: index,
+                                                              inFavorite: FavoriteModel.of(context).contains(product),
+                                                              onFavoriteChanged: (value) {
+                                                                FavoriteModel.of(context).toggle(product);
+                                                                setState(() {});
+                                                              },
                                                             ),
                                                           ),
                                                         );
-                                                      } else {
-                                                        return Container(
-                                                          height: 32,
-                                                          decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius: BorderRadius.circular(8),
-                                                            border: Border.all(color: accentLightColor, width: 0.8),
-                                                          ),
-                                                          child: Row(
-                                                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                            children: [
-                                                              SizedBox(
-                                                                width: 32,
-                                                                height: 32,
-                                                                child: IconButton(
-                                                                  padding: EdgeInsets.zero,
-                                                                  iconSize: 16,
-                                                                  icon: const Icon(Icons.remove, color: Colors.red),
-                                                                  onPressed: () {
-                                                                    CartModel.of(context).remove(product);
-                                                                    setState(() {});
-                                                                  },
-                                                                ),
-                                                              ),
-                                                              Text(
-                                                                '$quantity',
-                                                                style: const TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
-                                                              ),
-                                                              SizedBox(
-                                                                width: 32,
-                                                                height: 32,
-                                                                child: IconButton(
-                                                                  padding: EdgeInsets.zero,
-                                                                  iconSize: 16,
-                                                                  icon: const Icon(Icons.add, color: Colors.green),
-                                                                  onPressed: () {
-                                                                    CartModel.of(context).add(product);
-                                                                    setState(() {});
-                                                                  },
-                                                                ),
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        );
-                                                      }
-                                                    },
+                                                      },
+                                                      child: Center(
+                                                        child: Text(
+                                                          '${product.price.toStringAsFixed(0)} ₽',
+                                                          style: const TextStyle(fontSize: 13, fontWeight: FontWeight.bold),
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ],
@@ -233,16 +195,7 @@ class _ProductListByCategoryPageState extends State<ProductListByCategoryPage> {
       MaterialPageRoute(builder: (context) => ProductDetailPage(
         product: product,
         index: index,
-        inCart: CartModel.of(context).items.any((item) => item.product.title == product.title),
         inFavorite: favoriteModel.contains(product),
-        onCartChanged: (value) {
-          if (value) {
-            CartModel.of(context).add(product);
-          } else {
-            CartModel.of(context).remove(product);
-          }
-          setState(() {});
-        },
         onFavoriteChanged: (value) {
           favoriteModel.toggle(product);
           setState(() {});
@@ -253,6 +206,5 @@ class _ProductListByCategoryPageState extends State<ProductListByCategoryPage> {
 
   void _toggleFavorite(ProductCard product) {
     FavoriteModel.of(context).toggle(product);
-    setState(() {});
   }
 } 

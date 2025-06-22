@@ -106,6 +106,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: _loginController,
                     decoration: InputDecoration(
                       labelText: 'Логин',
+                      labelStyle: const TextStyle(color: Colors.black54),
+                      hintStyle: const TextStyle(color: Colors.black54),
                       filled: true,
                       fillColor: ironManMetal.withOpacity(0.08),
                       border: OutlineInputBorder(
@@ -122,6 +124,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     controller: _emailController,
                     decoration: InputDecoration(
                       labelText: 'E-mail',
+                      labelStyle: const TextStyle(color: Colors.black54),
+                      hintStyle: const TextStyle(color: Colors.black54),
                       filled: true,
                       fillColor: ironManMetal.withOpacity(0.08),
                       border: OutlineInputBorder(
@@ -139,6 +143,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Пароль',
+                      labelStyle: const TextStyle(color: Colors.black54),
+                      hintStyle: const TextStyle(color: Colors.black54),
                       filled: true,
                       fillColor: ironManMetal.withOpacity(0.08),
                       border: OutlineInputBorder(
@@ -156,6 +162,8 @@ class _RegisterPageState extends State<RegisterPage> {
                     obscureText: true,
                     decoration: InputDecoration(
                       labelText: 'Подтвердите пароль',
+                      labelStyle: const TextStyle(color: Colors.black54),
+                      hintStyle: const TextStyle(color: Colors.black54),
                       filled: true,
                       fillColor: ironManMetal.withOpacity(0.08),
                       border: OutlineInputBorder(

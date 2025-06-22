@@ -160,7 +160,7 @@ class _LoginPageState extends State<LoginPageCreateState>{
                     padding: const EdgeInsets.all(20),
                     color: accentLightColor,
                     child: const Text('Формат e-mail:\n'
-                        'name@example.ru', style: TextStyle(color: Colors.black, fontSize: 15)),
+                        'name@example.ru', style: TextStyle(color: ironManMetal, fontSize: 15)),
                   ),
                 ),
               ),
@@ -338,7 +338,10 @@ class _LoginPageState extends State<LoginPageCreateState>{
                               height: 56,
                               child: TextFormField(
                                 controller: _loginController,
-                                decoration: InputDecoration(labelText: 'Логин или e-mail',
+                                decoration: InputDecoration(
+                                  labelText: 'Логин или e-mail',
+                                  labelStyle: const TextStyle(color: Colors.black54),
+                                  hintStyle: const TextStyle(color: Colors.black54),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         width: 2, color: accentLightColor
@@ -391,6 +394,8 @@ class _LoginPageState extends State<LoginPageCreateState>{
                                 controller: _passwordController,
                                 decoration: InputDecoration(
                                   labelText: 'Пароль',
+                                  labelStyle: const TextStyle(color: Colors.black54),
+                                  hintStyle: const TextStyle(color: Colors.black54),
                                   enabledBorder: OutlineInputBorder(
                                     borderSide: BorderSide(
                                         width: 2, color: accentLightColor

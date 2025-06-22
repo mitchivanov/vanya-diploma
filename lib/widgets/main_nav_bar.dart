@@ -33,13 +33,9 @@ class MainNavBar extends StatelessWidget {
           label: '',
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.shopping_cart, color: currentIndex == 1 ? accentLightColor : Colors.grey),
-          label: '',
-        ),
-        BottomNavigationBarItem(
           icon: Image.asset(
             favoriteIcon,
-            color: currentIndex == 2 ? accentLightColor : Colors.grey,
+            color: currentIndex == 1 ? accentLightColor : Colors.grey,
             height: 28,
           ),
           label: '',
@@ -47,7 +43,7 @@ class MainNavBar extends StatelessWidget {
         BottomNavigationBarItem(
           icon: Image.asset(
             accountIcon,
-            color: currentIndex == 3 ? accentLightColor : Colors.grey,
+            color: currentIndex == 2 ? accentLightColor : Colors.grey,
             height: 28,
           ),
           label: '',
